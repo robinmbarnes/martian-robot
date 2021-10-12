@@ -15,7 +15,7 @@ interface Robot {
     isLost: boolean
 }
 
-interface State {
+export interface State {
     yMax: number,
     xMax: number,
     robots: Robot[]
@@ -95,7 +95,7 @@ const isAboutToDie = (otherRobots: Robot[], currentRobot: Robot) =>
 const moveRobot = ({ movement }: MoveRobotPayload, currentState: State) => {
     const { robots, ...rest } = currentState;
     let currentRobot = { ...robots[robots.length - 1] };
-    const otherRobots = robots.splice(0, robots.length - 1);
+    const otherRobots = [...robots].splice(0, robots.length - 1);
     if (currentRobot.isLost) {
         return currentState;
     }
