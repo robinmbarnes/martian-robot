@@ -21,9 +21,36 @@ interface State {
     robots: Robot[]
 }
 
-interface InitWorldPayload {
+interface Coord {
+    x: number,
+    y: number
+}
+
+export enum Movement {
+    F = 'F',
+    L = 'L',
+    R = 'R'
+}
+
+export interface InitRobotPayload {
+    direction: Direction,
+    x: number,
+    y: number
+}
+
+export interface InitWorldPayload {
     xMax: number,
     yMax: number
+}
+
+export interface MoveRobotPayload {
+    movement: Movement
+}
+
+interface Handlers {
+    initWorld: typeof initWorld,
+    initRobot: typeof initRobot,
+    moveRobot: typeof moveRobot
 }
 
 const initWorld = ({ xMax, yMax }: InitWorldPayload, currentState: State) => {
@@ -33,12 +60,6 @@ const initWorld = ({ xMax, yMax }: InitWorldPayload, currentState: State) => {
         yMax
     };
 };
-
-interface InitRobotPayload {
-    direction: Direction,
-    x: number,
-    y: number
-}
 
 const initRobot = ({ direction, x, y }: InitRobotPayload, currentState: State) => {
     const { robots, ...rest } = currentState;
@@ -60,11 +81,6 @@ const points = [
     Direction.W
 ];
 
-interface Coord {
-    x: number,
-    y: number
-}
-
 const movements = {
     'N': ({ x, y }: Coord) => ({ x, y: y + 1 }),
     'E': ({ x, y }: Coord) => ({ x: x + 1, y }),
@@ -75,15 +91,6 @@ const movements = {
 const isAboutToDie = (otherRobots: Robot[], currentRobot: Robot) =>
     otherRobots.some(robot => isEqual(omit(robot, 'isLost'), omit(currentRobot, 'isLost')));
 
-export enum Movement {
-    F = 'F',
-    L = 'L',
-    R = 'R'
-}
-
-interface MoveRobotPayload {
-    movement: Movement
-}
 
 const moveRobot = ({ movement }: MoveRobotPayload, currentState: State) => {
     const { robots, ...rest } = currentState;
@@ -100,7 +107,7 @@ const moveRobot = ({ movement }: MoveRobotPayload, currentState: State) => {
         case Movement.L:
             currentRobot.direction = points[currentPoint > 0 ? currentPoint - 1 : 3];
             break;
-        case 'F':
+        case Movement.F:
             const { x, y } = movements[currentRobot.direction]({ x: currentRobot.x, y: currentRobot.y });
             const { xMax, yMax } = currentState;
             if (!isAboutToDie(otherRobots, currentRobot)) {
@@ -122,12 +129,6 @@ export enum StateAction {
     initWorld = 'initWorld',
     initRobot = 'initRobot',
     moveRobot = 'moveRobot',
-}
-
-interface Handlers {
-    initWorld: typeof initWorld,
-    initRobot: typeof initRobot,
-    moveRobot: typeof moveRobot
 }
 
 const handlers: Handlers = {
