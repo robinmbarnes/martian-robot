@@ -2,5 +2,18 @@ import React from 'react';
 import { State } from '../state-machine/state-machine';
 
 export default ({ state }: { state: State | null }) => {
-    return (<div>{JSON.stringify(state)}</div>);
+    if (!state) {
+        return null;
+    }
+    const { robots } = state;
+    return (
+        <ul className="list-unstyled">
+            {robots.map(robot => {
+                const data = `${robot.x} ${robot.y} ${robot.direction} ${robot.isLost ? 'LOST' : ''}`;
+                return (
+                    <li key={data}>{data}</li>
+                );
+            })}
+        </ul>
+    );
 };

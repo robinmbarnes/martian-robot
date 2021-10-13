@@ -40,10 +40,7 @@ const hanldeMoveRobot = (line: string): Action[] => line.split('')
 
 export default (input: string) => {
     let expectedLineType: LineTypes = LineTypes.initWorld;
-    const lines = input.split('\n').map(x => x.trim());
-    if (lines[lines.length - 1] === '') {
-        lines.pop();
-    }
+    const lines = input.split('\n').map(x => x.trim()).filter(x => x.length > 0);
     return flatten(lines.map(line => {
         switch (expectedLineType) {
             case LineTypes.initWorld:
@@ -53,11 +50,8 @@ export default (input: string) => {
                 expectedLineType = LineTypes.moveRobot;
                 return hanldeInitRobot(line);
             case LineTypes.moveRobot:
-                expectedLineType = LineTypes.blank;
-                return hanldeMoveRobot(line);
-            case LineTypes.blank:
                 expectedLineType = LineTypes.initRobot;
-                return null;
+                return hanldeMoveRobot(line);
         }
-    })).filter(x => x !== null);
+    }));
 };

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Container, Row, Col } from 'react-bootstrap';
 import inputRunner from '../input-runner/input-runner';
 import { State } from '../state-machine/state-machine';
 import MarsInput from './mars-input';
@@ -9,5 +10,17 @@ export default () => {
     const handleSubmit = (input: string) => {
         setState(inputRunner(input));
     };
-    return <div><MarsInput onSubmit={handleSubmit} /><MarsOutput state={state} /></div>;
+    return (
+        <Container>
+            <Row><Col><h1>Mars Robots</h1></Col></Row>
+            <Row>
+                <Col>
+                    <MarsInput onSubmit={handleSubmit} />
+                </Col>
+                <Col>
+                    <MarsOutput state={state} />
+                </Col>
+            </Row>
+        </Container>
+    );
 };
