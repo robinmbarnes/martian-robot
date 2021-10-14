@@ -8,7 +8,7 @@
     "serve": "webpack-dev-server"
   },
   "engines": {
-    "node": ">=11.0"
+    "node": ">=14.0"
   },
   "author": "",
   "license": "ISC",
